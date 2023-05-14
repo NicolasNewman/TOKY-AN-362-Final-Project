@@ -1,9 +1,9 @@
 import { Actor } from 'apify';
 import { parseReviews, EXPORT } from './parseReviews';
-import { Review, writeJSON } from '@ghibli-analysis/shared';
+import { Review, writeJSON, json } from '@ghibli-analysis/shared';
 import { translateText } from './translateReviews';
 
-const reviews: Review[] = [];
+const reviews: Review[] = json as Review[];
 
 const parseMovie = async (id: string) => {
 	await parseReviews(id);
@@ -23,6 +23,6 @@ const parseMovie = async (id: string) => {
 	await writeJSON(reviews);
 	await parseMovie('240799'); // Howl
 	await writeJSON(reviews);
-	await Actor.exit();
 	await translateText();
+	await Actor.exit();
 })();

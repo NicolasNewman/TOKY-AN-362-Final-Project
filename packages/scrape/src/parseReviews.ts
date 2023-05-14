@@ -83,13 +83,13 @@ const parseReviews = async (id: string) => {
 			prevRead.push(reviews.length);
 			if (prevRead.length >= 3) prevRead.shift();
 			console.log(`${reviews.length} new reviews processed`);
-			await new Promise((r) => setTimeout(r, 2500));
+			await new Promise((r) => setTimeout(r, 100));
 			await enqueueLinks({ urls: [increment(page.url(), reviews.length)] });
 		},
 		// maxConcurrency: 4,
 		requestHandlerTimeoutSecs: 600,
 		navigationTimeoutSecs: 600,
-		maxRequestRetries: 5,
+		maxRequestRetries: 10,
 	});
 
 	await crawler.run([`https://movies.yahoo.co.jp/movie/${id}/review/?movieId=${id}&offset=0`]);
