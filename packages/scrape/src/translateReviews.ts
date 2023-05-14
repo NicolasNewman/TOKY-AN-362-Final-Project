@@ -19,4 +19,5 @@ export async function translateText() {
 			await writeJSON(data);
 		}
 	}
+	await writeJSON(data);
 }
