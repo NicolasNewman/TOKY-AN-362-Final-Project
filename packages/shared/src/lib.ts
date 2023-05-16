@@ -1,7 +1,7 @@
 import { writeFile, appendFile } from 'fs/promises';
 import { join } from 'path';
 
-export const FILENAME = 'data';
+export const FILENAME = 'raw';
 
 export const JSON_FILE = `${FILENAME}.json`;
 export const JSON_PATH = join(__dirname, '../src/', JSON_FILE);

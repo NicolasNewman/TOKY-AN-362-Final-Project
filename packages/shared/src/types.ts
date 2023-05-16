@@ -1,9 +1,9 @@
 export interface Review {
-	movieId: string;
+	movieId: number;
 	publishDate: string;
 	helpful: string;
 	reviewer: string;
-	rating: string;
+	rating: number;
 	title: string;
 	review: string;
 	reviewEN?: string;
@@ -16,8 +16,8 @@ export type RawData = Review[];
 export interface NGram {
 	ngram: string;
 	occurence: number;
-	relativeOccurence: number;
-	absoluteOccurence: number;
+	// relativeOccurence: number;
+	// absoluteOccurence: number;
 }
 
 export interface Stats {
