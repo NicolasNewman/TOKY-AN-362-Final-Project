@@ -22,6 +22,9 @@ importers:
       prettier: 2.8.8
       typescript: 5.0.4
 
+  packages/ml:
+    specifiers: {}
+
   packages/scrape:
     specifiers:
       '@ghibli-analysis/shared': workspace:*

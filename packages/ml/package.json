@@ -1,0 +1,13 @@
+{
+  "name": "ml",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "analyze": "poetry run python ml/analyze.py"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
