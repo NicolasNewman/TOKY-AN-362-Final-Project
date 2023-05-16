@@ -1,17 +1,19 @@
 import { Actor } from 'apify';
-import { parseReviews, EXPORT } from './parseReviews';
-import { Review, writeJSON, json } from '@ghibli-analysis/shared';
+import { parseReviews } from './parseReviews';
+import { Review, writeJSON, raw } from '@ghibli-analysis/shared';
 import { translateText } from './translateReviews';
 
-const reviews: Review[] = json as Review[];
+const reviews: Review[] = raw as Review[];
 
 const parseMovie = async (id: string) => {
-	await parseReviews(id);
-	reviews.push(...EXPORT);
+	let parsedReviews: false | Review[] = false;
+	while (!parsedReviews) {
+		parsedReviews = await parseReviews(id);
+	}
+	reviews.push(...parsedReviews);
 };
 
 (async () => {
-	// await writeCSV('w', 'movieId,publishDate,helpful,reviewer,rating,title,review\n');
 	await Actor.init();
 	await parseMovie('163027'); // Spirited Away
 	await writeJSON(reviews);

@@ -1,9 +1,9 @@
 import { v2 } from '@google-cloud/translate';
-import { json, Review, writeJSON } from '@ghibli-analysis/shared';
+import { raw, Review, writeJSON } from '@ghibli-analysis/shared';
 
 const TARGET = 'en';
 const translate = new v2.Translate();
-const data: Review[] = json as Review[];
+const data: Review[] = raw as Review[];
 
 export async function translateText() {
 	const nReviews = data.length;

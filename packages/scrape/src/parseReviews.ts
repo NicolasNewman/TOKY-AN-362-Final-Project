@@ -7,48 +7,38 @@ const increment = (url: string, amnt: number) => {
 	return `${str?.[1]}${parseInt(str?.[2] ?? '0') + amnt}`;
 };
 
-let EXPORT: Review[] = [];
 const parseReviews = async (id: string) => {
-	const prevRead: number[] = [];
-	EXPORT = [];
+	const reviewList: Review[] = [];
 	const crawler = new PuppeteerCrawler({
 		async requestHandler({ request, page, enqueueLinks, crawler }) {
 			console.log(`Processing ${page.url()}`);
 			const dlog = (msg: any) => console.log(msg.toString());
 
-			if (prevRead.length >= 2 && prevRead[0] !== prevRead[1]) {
+			await page.exposeFunction('dlog', dlog);
+			await new Promise((r) => setTimeout(r, 100));
+			if ((await page.content()).includes('まだレビューは投稿されていません')) {
 				return;
 			}
-
-			await page.exposeFunction('dlog', dlog);
-			await page.exposeFunction('increment', increment);
 			await page.waitForSelector('section.riff-mr-3.riff-ml-3 ul');
 
-			let i = 1;
-			// Note: while loop with querySelect instead of querySelectAll
-			// to prevent future handles from becoming invalid after clicking.
-			let button = await page.$(
-				`section.riff-mr-3.riff-ml-3 ul li button.riff-Clickable__root:nth-of-type(${i++})`,
+			const buttons = await page.$$(
+				'section.riff-mr-3.riff-ml-3 ul div.riff-flex > div.riff-flex > button.riff-Clickable__root',
 			);
-			while (button) {
+			for (const button of buttons) {
 				const btnText = await (await button.getProperty('innerText')).jsonValue();
 				if (btnText.includes('表示する')) {
 					await button.click();
-					await page.waitForNetworkIdle();
 				}
-				button = await page.$(
-					`section.riff-mr-3.riff-ml-3 ul li button.riff-Clickable__root:nth-of-type(${i})`,
-				);
 			}
 
-			await page.waitForNetworkIdle();
-
+			await new Promise((r) => setTimeout(r, 1000));
+			await page.waitForSelector('section.riff-mr-3.riff-ml-3 ul');
 			const reviews = await page.$$eval(
 				'section.riff-mr-3.riff-ml-3 ul li',
 				($$elems, movieId) => {
 					const reviews: Review[] = [];
 
-					$$elems.forEach(($elem) => {
+					for (const $elem of $$elems) {
 						const $rating = $elem.children.item(0);
 						const $title = $elem.children.item(1);
 						const $body = $elem.children.item(2);
@@ -58,6 +48,10 @@ const parseReviews = async (id: string) => {
 							return;
 						}
 
+						if ($body.textContent?.replace(/\n/g, '')?.includes('表示する')) {
+							dlog('SPOILER IN REVIEW!');
+							continue;
+						}
 						reviews.push({
 							title: $title.lastChild?.textContent || '',
 							review: $body.textContent?.replace(/\n/g, '') || '',
@@ -72,19 +66,20 @@ const parseReviews = async (id: string) => {
 							publishDate: $rating.querySelector('time')?.getAttribute('datetime') || '',
 							movieId,
 						});
-					});
-
+					}
 					return reviews;
 				},
 				id,
 			);
 
-			EXPORT.push(...reviews);
-			prevRead.push(reviews.length);
-			if (prevRead.length >= 3) prevRead.shift();
-			console.log(`${reviews.length} new reviews processed`);
-			await new Promise((r) => setTimeout(r, 100));
-			await enqueueLinks({ urls: [increment(page.url(), reviews.length)] });
+			if (reviews) {
+				reviewList.push(...reviews);
+				console.log(`${reviews.length} new reviews processed`);
+				await new Promise((r) => setTimeout(r, 100));
+				await enqueueLinks({ urls: [increment(page.url(), 20)] });
+			} else {
+				console.log('SOMETHING VERY WRONG');
+			}
 		},
 		// maxConcurrency: 4,
 		requestHandlerTimeoutSecs: 600,
@@ -92,7 +87,13 @@ const parseReviews = async (id: string) => {
 		maxRequestRetries: 10,
 	});
 
-	await crawler.run([`https://movies.yahoo.co.jp/movie/${id}/review/?movieId=${id}&offset=0`]);
+	try {
+		await crawler.run([`https://movies.yahoo.co.jp/movie/${id}/review/?movieId=${id}&offset=0`]);
+		return reviewList;
+	} catch (e) {
+		console.error(e);
+		return false;
+	}
 };
 
-export { parseReviews, EXPORT };
+export { parseReviews };
