@@ -45,8 +45,12 @@ def tfid(df: pd.DataFrame):
     df2 = df2.sort_values('TF-IDF', ascending=False)
     print(df2.head(25))
 
+# Custom repr that doesn't add quotes around string values
+class CustomList(list):
+    def __repr__(self):
+        return '[' + ', '.join([v for v in self]) + ']'
 
-
+movieReviews = []
 data = []
 for movieId in df["movieId"].unique():
     subset = df[df["movieId"].eq(movieId)]
@@ -62,9 +66,23 @@ for movieId in df["movieId"].unique():
     n2 = make_ngram(negative, 2, 30)
     n1 = make_ngram(negative, 1, 30)
 
+    pos,neg,reviews = zip(*[
+         [
+             f"m{movieId}[{i}]" if v["rating"] > 3 else None,
+             f"m{movieId}[{i}]" if v["rating"] < 3 else None,
+             f"m{movieId}[{i}]"
+        ] 
+        for [i,v] in enumerate(subset.to_dict(orient='records'))
+    ])
+    pos = [x for x in list(pos) if x is not None]
+    neg = [x for x in list(neg) if x is not None]
+    movieReviews.append(f"const m{movieId}: Review[] = {subset.to_dict(orient='records')}")
+
     d = {
         'movieId': str(movieId),
-        'reviews': subset.to_dict(orient='records'),
+        'reviews': CustomList(reviews),
+        'positive': CustomList(pos),
+        'negative': CustomList(neg),
         'stats': {
             'avg': round(subset['rating'].mean(), 2),
             'avgStrong': round(subset[subset['rating'].ne(3)]['rating'].mean(), 2),
@@ -104,13 +122,13 @@ for movieId in df["movieId"].unique():
         ]
     }
     data.append(d)
-    break
 
 content = f"""
 /* eslint-disable quotes */
 /* eslint-disable max-len */
-import {{ Data }} from './types';
+import {{ Data, Review }} from './types';
 
+{";".join(movieReviews)}
 export const data: Data[] = {data}
 """
 
