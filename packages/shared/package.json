@@ -1,5 +1,5 @@
 {
-  "name": "shared",
+  "name": "@ghibli-analysis/shared",
   "version": "1.0.0",
   "description": "",
   "private": "true",
