@@ -37,11 +37,15 @@ export interface Data {
 	negative: Review[];
 	stats: Stats;
 	positiveNGrams: {
-		n: number;
-		data: NGram[];
-	}[];
+		'1': NGram[];
+		'2': NGram[];
+		'3': NGram[];
+	};
 	negativeNGrams: {
-		n: number;
-		data: NGram[];
-	}[];
+		'1': NGram[];
+		'2': NGram[];
+		'3': NGram[];
+	};
 }
+
+export type NGramId = keyof Data['positiveNGrams'];

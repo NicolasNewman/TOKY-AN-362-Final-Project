@@ -49,10 +49,16 @@ def tfid(df: pd.DataFrame):
 class CustomList(list):
     def __repr__(self):
         return '[' + ', '.join([v for v in self]) + ']'
+    
+class CustomListDict(list):
+    def __repr__(self):
+        return '{' + ', '.join([v for v in self]) + '}'
 
 movieReviews = []
 data = []
+movieIds = []
 for movieId in df["movieId"].unique():
+    movieIds.append(str(movieId))
     subset = df[df["movieId"].eq(movieId)]
     negative = subset[subset["rating"].le(2)]
     positive = subset[subset["rating"].ge(4)]
@@ -92,34 +98,16 @@ for movieId in df["movieId"].unique():
             'nStrong': positive['rating'].count() + negative['rating'].count(),
             'nMixed': mixed['rating'].count()
         },
-        'positiveNGrams': [
-            {
-                'n': 1,
-                'data': p1
-            },
-            {
-                'n': 2,
-                'data': p2
-            },
-            {
-                'n': 3,
-                'data': p3
-            },
-        ],
-        'negativeNGrams': [
-            {
-                'n': 1,
-                'data': n1
-            },
-            {
-                'n': 2,
-                'data': n2
-            },
-            {
-                'n': 3,
-                'data': n3
-            },
-        ]
+        'positiveNGrams': {
+            '1': p1,
+            '2': p2,
+            '3': p3
+        },
+        'negativeNGrams': {           
+            '1': n1,
+            '2': n2,
+            '3': n3,           
+        }
     }
     data.append(d)
 
@@ -129,7 +117,15 @@ content = f"""
 import {{ Data, Review }} from './types';
 
 {";".join(movieReviews)}
-export const data: Data[] = {data}
+export type MovieId = {' | '.join(movieIds)};
+export const movieIdToName: {{[key in MovieId]: string}} = {{
+    163027: 'Spirited Away',
+    159561: 'Princess Mononoke',
+    327529: 'Ponyo',
+    335800: 'Secret World of Arriety',
+    240799: "Howl's Moving Castle"
+}};
+export const data: {{[key in MovieId]: Data}} = {CustomListDict([f"'{d['movieId']}': {d}" for d in data])}
 """
 
 with open('../shared/src/data.ts', 'w') as writer:
