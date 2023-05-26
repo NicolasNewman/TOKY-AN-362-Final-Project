@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import Route from '../components/Route';
 
 const Root: React.FC = ({}) => {
 	const loc = useLocation();
@@ -8,22 +9,10 @@ const Root: React.FC = ({}) => {
 			<div className="pt-4">
 				<div className="text-5xl">Ghibli Analysis</div>
 				<div className="mt-4 flex justify-center">
-					<Link
-						className={`text-xl mx-2 pb-1 hover:text-blue-500 ${
-							loc.pathname === '/home' ? 'border-b-2 hover:border-b-blue-500' : ''
-						}`}
-						to={'/home'}
-					>
-						Home{' '}
-					</Link>
-					<Link
-						className={`text-xl mx-2 pb-1 hover:text-blue-500 ${
-							loc.pathname === '/testing' ? 'border-b-2 hover:border-b-blue-500' : ''
-						}`}
-						to={'/testing'}
-					>
-						Testing{' '}
-					</Link>
+					<Route name="Home" path="/home" />
+					<Route name="Overview" path="/overview" />
+					<Route name="NGrams" path="/ngrams" />
+					<Route name="Testing" path="/testing" />
 				</div>
 			</div>
 			<div className="mt-10">
