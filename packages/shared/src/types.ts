@@ -1,3 +1,5 @@
+import { MovieId } from './data';
+
 export interface Review {
 	movieId: number;
 	publishDate: string;
@@ -28,10 +30,11 @@ export interface Stats {
 	nNegative: number;
 	nStrong: number;
 	nMixed: number;
+	references: { [key in MovieId]: number };
 }
 
 export interface Data {
-	movieId: string;
+	movieId: MovieId;
 	reviews: Review[];
 	positive: Review[];
 	negative: Review[];
