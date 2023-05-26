@@ -8,14 +8,22 @@ from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
 
 df = pd.read_json('../shared/src/raw.json')
 
-stopwords = ["ponyo", "sosuke", "ashitaka", "ichihiro", "spirited", "chihiro", "turnip", "calcifer", "sophie", "ve", "hayao", "haku", "crayon"]
+stopwords = []
+# stopwords = ["sosuke", "ashitaka", "ichihiro", "spirited", "chihiro", "turnip", "calcifer", "sophie", "ve", "hayao", "haku", "crayon"]
 # stopwords = ["kiki", "ghibli", "miyazaki", "howl", "ponyo", "mononoke", "arrietty", "castle", "ashitaka", "totoro"]
 movieIdToName = {
     163027: 'Spirited Away',
     159561: 'Mononoke',
     327529: 'Ponyo',
-    335800: 'Arriety',
+    335800: 'Arrietty',
     240799: 'Howl\'s Moving Castle'
+}
+movieIdToIdentifier = {
+    163027: 'spirited away',
+    159561: 'mononoke',
+    327529: 'ponyo',
+    335800: 'arrietty',
+    240799: "howl"
 }
 
 def make_ngram(df: pd.DataFrame, pairsize = 3, cnt = 10):
@@ -63,7 +71,7 @@ for movieId in df["movieId"].unique():
     negative = subset[subset["rating"].le(2)]
     positive = subset[subset["rating"].ge(4)]
     mixed = subset[subset['rating'].eq(3)]
-   
+    strong = subset[subset['rating'].ne(3)]
     p3 = make_ngram(positive, 3, 30)
     p2 = make_ngram(positive, 2, 30)
     p1 = make_ngram(positive, 1, 30)
@@ -83,9 +91,9 @@ for movieId in df["movieId"].unique():
     pos = [x for x in list(pos) if x is not None]
     neg = [x for x in list(neg) if x is not None]
     movieReviews.append(f"const m{movieId}: Review[] = {subset.to_dict(orient='records')}")
-
+    strong['reviewEN'] = strong['reviewEN'].str.lower()
     d = {
-        'movieId': str(movieId),
+        'movieId': movieId,
         'reviews': CustomList(reviews),
         'positive': CustomList(pos),
         'negative': CustomList(neg),
@@ -96,7 +104,14 @@ for movieId in df["movieId"].unique():
             'nPositive': positive['rating'].count(),
             'nNegative': negative['rating'].count(),
             'nStrong': positive['rating'].count() + negative['rating'].count(),
-            'nMixed': mixed['rating'].count()
+            'nMixed': mixed['rating'].count(),
+            "references": {
+                '163027': strong['reviewEN'].str.contains(movieIdToIdentifier[163027]).sum(),
+                '159561': strong['reviewEN'].str.contains(movieIdToIdentifier[159561]).sum(),
+                '327529': strong['reviewEN'].str.contains(movieIdToIdentifier[327529]).sum(),
+                '335800': strong['reviewEN'].str.contains(movieIdToIdentifier[335800]).sum(),
+                '240799': strong['reviewEN'].str.contains(movieIdToIdentifier[240799]).sum(),
+            },
         },
         'positiveNGrams': {
             '1': p1,
@@ -109,6 +124,7 @@ for movieId in df["movieId"].unique():
             '3': n3,           
         }
     }
+    d['stats']['references'][f'{movieId}'] = 0
     data.append(d)
 
 content = f"""
@@ -122,8 +138,15 @@ export const movieIdToName: {{[key in MovieId]: string}} = {{
     163027: 'Spirited Away',
     159561: 'Princess Mononoke',
     327529: 'Ponyo',
-    335800: 'Secret World of Arriety',
+    335800: 'Secret World of Arrietty',
     240799: "Howl's Moving Castle"
+}};
+export const movieIdToIdentifier: {{[key in MovieId]: string}} = {{
+    163027: 'Spirited Away',
+    159561: 'Mononoke',
+    327529: 'Ponyo',
+    335800: 'Arrietty',
+    240799: "Howl"
 }};
 export const data: {{[key in MovieId]: Data}} = {CustomListDict([f"'{d['movieId']}': {d}" for d in data])}
 """
