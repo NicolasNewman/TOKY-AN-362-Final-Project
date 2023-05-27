@@ -9,6 +9,7 @@
     "dist/"
   ],
   "scripts": {
+    "lint:fix": "eslint --fix .",
     "build": "tsc"
   },
   "keywords": [],

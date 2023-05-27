@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/translate": "^7.2.1",
     "@ghibli-analysis/shared": "workspace:*",
+    "@google-cloud/translate": "^7.2.1",
+    "@vitalets/google-translate-api": "^9.2.0",
     "apify": "^3.1.4",
     "crawlee": "^3.3.2",
+    "http-proxy-agent": "^7.0.0",
     "playwright": "^1.33.0",
     "puppeteer": "^20.2.0"
   },
