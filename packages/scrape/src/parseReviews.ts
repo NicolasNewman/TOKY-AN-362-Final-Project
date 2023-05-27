@@ -55,16 +55,17 @@ const parseReviews = async (id: string) => {
 						reviews.push({
 							title: $title.lastChild?.textContent || '',
 							review: $body.textContent?.replace(/\n/g, '') || '',
-							rating:
+							rating: parseFloat(
 								$rating.querySelector('span.riff-text-medium.riff-font-bold.riff-leading-none')
 									?.textContent || '',
+							),
 							reviewer:
 								$rating.querySelector(
 									'span.riff-Text__root--lineClamp1.riff-flex.riff-items-center.riff-text-small',
 								)?.textContent || '',
 							helpful: $extra?.querySelector('button span')?.textContent || '',
 							publishDate: $rating.querySelector('time')?.getAttribute('datetime') || '',
-							movieId,
+							movieId: parseInt(movieId),
 						});
 					}
 					return reviews;
