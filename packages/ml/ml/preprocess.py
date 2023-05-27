@@ -23,6 +23,7 @@ preprocessorJA.pipe(normalize_whitespace)
 
 
 df = pd.read_json('../shared/src/raw.json')
+df["reviewEN"] = df["reviewEN"].astype('string')
 df["reviewENClean"] = df["reviewEN"].map(lambda x: preprocessorEN.run(x))
 print(df["reviewENClean"].head(6))
 df.to_json('../shared/src/raw.json', orient='records', force_ascii=False)

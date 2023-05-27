@@ -16,14 +16,35 @@ movieIdToName = {
     159561: 'Mononoke',
     327529: 'Ponyo',
     335800: 'Arrietty',
-    240799: 'Howl\'s Moving Castle'
+    240799: 'Howl\'s Moving Castle',
+    150435: 'My Neighbor Totoro',
+    89972: 'Kiki\'s Deliver Service',
+    149868: 'Laputa: Castle in the Sky',
+    89778: 'Whisper of the Heart',
+    148901: 'Nausicaa of the Valley of the Wind',
+    150436: 'Grave of the Fireflies',
+    152271: 'Pom Poko',
+    344584: 'The Wind Rises',
+    151441: 'Only Yesterday',
+    161722: 'My Neighbors the Yamadas',
+
 }
 movieIdToIdentifier = {
     163027: 'spirited away',
     159561: 'mononoke',
     327529: 'ponyo',
     335800: 'arrietty',
-    240799: "howl"
+    240799: 'howl',
+    150435: 'totoro',
+    89972: 'kiki',
+    149868: 'laputa',
+    89778: 'whisper',
+    148901: 'nausicaa',
+    150436: 'grave of the fireflies',
+    152271: 'pom poko',
+    344584: 'wind rises',
+    151441: 'only yesterday',
+    161722: 'yamadas',
 }
 
 def make_ngram(df: pd.DataFrame, pairsize = 3, cnt = 10):
@@ -111,6 +132,16 @@ for movieId in df["movieId"].unique():
                 '327529': strong['reviewEN'].str.contains(movieIdToIdentifier[327529]).sum(),
                 '335800': strong['reviewEN'].str.contains(movieIdToIdentifier[335800]).sum(),
                 '240799': strong['reviewEN'].str.contains(movieIdToIdentifier[240799]).sum(),
+                '150435': strong['reviewEN'].str.contains(movieIdToIdentifier[150435]).sum(),
+                '89972': strong['reviewEN'].str.contains(movieIdToIdentifier[89972]).sum(),
+                '149868': strong['reviewEN'].str.contains(movieIdToIdentifier[149868]).sum(),
+                '89778': strong['reviewEN'].str.contains(movieIdToIdentifier[89778]).sum(),
+                '148901': strong['reviewEN'].str.contains(movieIdToIdentifier[148901]).sum(),
+                '150436': strong['reviewEN'].str.contains(movieIdToIdentifier[150436]).sum(),
+                '152271': strong['reviewEN'].str.contains(movieIdToIdentifier[152271]).sum(),
+                '344584': strong['reviewEN'].str.contains(movieIdToIdentifier[344584]).sum(),
+                '151441': strong['reviewEN'].str.contains(movieIdToIdentifier[151441]).sum(),
+                '161722': strong['reviewEN'].str.contains(movieIdToIdentifier[161722]).sum()
             },
         },
         'positiveNGrams': {
@@ -139,14 +170,34 @@ export const movieIdToName: {{[key in MovieId]: string}} = {{
     159561: 'Princess Mononoke',
     327529: 'Ponyo',
     335800: 'Secret World of Arrietty',
-    240799: "Howl's Moving Castle"
+    240799: "Howl's Moving Castle",
+    150435: 'My Neighbor Totoro',
+    89972: "Kiki's Deliver Service",
+    149868: 'Laputa: Castle in the Sky',
+    89778: 'Whisper of the Heart',
+    148901: 'Nausicaa of the Valley of the Wind',
+    150436: 'Grave of the Fireflies',
+    152271: 'Pom Poko',
+    344584: 'The Wind Rises',
+    151441: 'Only Yesterday',
+    161722: 'My Neighbors the Yamadas'
 }};
 export const movieIdToIdentifier: {{[key in MovieId]: string}} = {{
-    163027: 'Spirited Away',
-    159561: 'Mononoke',
-    327529: 'Ponyo',
-    335800: 'Arrietty',
-    240799: "Howl"
+    163027: 'spirited away',
+    159561: 'mononoke',
+    327529: 'ponyo',
+    335800: 'arrietty',
+    240799: "howl",
+    150435: 'totoro',
+    89972: 'kiki',
+    149868: 'laputa',
+    89778: 'whisper',
+    148901: 'nausicaa',
+    150436: 'grave of the fireflies',
+    152271: 'pom poko',
+    344584: 'wind rises',
+    151441: 'only yesterday',
+    161722: 'yamadas'
 }};
 export const data: {{[key in MovieId]: Data}} = {CustomListDict([f"'{d['movieId']}': {d}" for d in data])}
 """
