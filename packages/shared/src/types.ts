@@ -35,9 +35,11 @@ export interface Stats {
 
 export interface Data {
 	movieId: MovieId;
+	dor: number;
 	reviews: Review[];
 	positive: Review[];
 	negative: Review[];
+	reviewByYears: { [key in string]: Review[] };
 	stats: Stats;
 	positiveNGrams: {
 		'1': NGram[];

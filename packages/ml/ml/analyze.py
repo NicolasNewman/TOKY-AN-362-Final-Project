@@ -29,6 +29,24 @@ movieIdToName = {
     161722: 'My Neighbors the Yamadas',
 
 }
+movieIdToDOR = {
+  89778: 1995,
+  89972: 1989,
+  148901: 1984,
+  149868: 1986,
+  150435: 1988,
+  150436: 1988,
+  151441: 1991,
+  152271: 1994,
+  159561: 1997,
+  161722: 1999,
+  163027: 2001,
+  240799: 2004,
+  327529: 2008,
+  335800: 2010,
+  344584: 2013
+}
+
 movieIdToIdentifier = {
     163027: 'spirited away',
     159561: 'mononoke',
@@ -83,6 +101,14 @@ class CustomListDict(list):
     def __repr__(self):
         return '{' + ', '.join([v for v in self]) + '}'
 
+class CustomDictList(dict[any, list]):
+    def __repr__(self):
+        return f"""
+        {{
+            {','.join([f'{k}: {CustomList(v)}' for k,v in self.items()])}
+        }}
+        """
+
 movieReviews = []
 data = []
 movieIds = []
@@ -101,11 +127,14 @@ for movieId in df["movieId"].unique():
     n2 = make_ngram(negative, 2, 30)
     n1 = make_ngram(negative, 1, 30)
 
-    pos,neg,reviews = zip(*[
-         [
-             f"m{movieId}[{i}]" if v["rating"] > 3 else None,
-             f"m{movieId}[{i}]" if v["rating"] < 3 else None,
-             f"m{movieId}[{i}]"
+    years = {k: [] for k in dict.fromkeys(pd.to_datetime(subset['publishDate']).dt.year.unique())}
+    pos,neg,reviews,_ = zip(*[
+            [
+                f"m{movieId}[{i}]" if v["rating"] > 3 else None,
+                f"m{movieId}[{i}]" if v["rating"] < 3 else None,
+                f"m{movieId}[{i}]",
+                years[pd.to_datetime(v['publishDate']).year].append(f"m{movieId}[{i}]")
+
         ] 
         for [i,v] in enumerate(subset.to_dict(orient='records'))
     ])
@@ -115,9 +144,11 @@ for movieId in df["movieId"].unique():
     strong['reviewEN'] = strong['reviewEN'].str.lower()
     d = {
         'movieId': movieId,
+        'dor': movieIdToDOR[movieId],
         'reviews': CustomList(reviews),
         'positive': CustomList(pos),
         'negative': CustomList(neg),
+        'reviewByYears': CustomDictList(years),
         'stats': {
             'avg': round(subset['rating'].mean(), 2),
             'avgStrong': round(subset[subset['rating'].ne(3)]['rating'].mean(), 2),
