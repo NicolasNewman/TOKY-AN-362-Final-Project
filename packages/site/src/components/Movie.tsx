@@ -1,5 +1,5 @@
 import { Data, movieIdToName } from '@ghibli-analysis/shared/dist/web';
-import React, { ReactElement, ReactNode } from 'react';
+import React from 'react';
 import { round } from '../lib/math';
 import { Card } from 'antd';
 import { posters } from '../assets';
@@ -12,9 +12,9 @@ interface IProps {
 
 const Movie: React.FC<IProps> = ({ movie }) => {
 	const movieName = movieIdToName[movie.movieId];
-	const { n, avg, nPositive, nNegative, nMixed, avgStrong } = movie.stats;
+	const { n, avg, nPositive, nNegative, nMixed } = movie.stats;
 	return (
-		<Card className="h-fit" title={movieName}>
+		<Card className="h-fit" title={`[${movie.dor}] ${movieName}`}>
 			<div className="flex">
 				<img className="h-[128px]" src={posters[movie.movieId]} alt={movieIdToName[movie.movieId]} />
 				<div className="flex flex-col p-2 w-full">
