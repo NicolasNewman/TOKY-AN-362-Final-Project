@@ -11,8 +11,15 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
             - name: 📥 Monorepo install
+              env:
+                  NODE_OPTIONS: '--max_old_space_size=4096'
               uses: ./.github/actions/pnpm-install
             # - name: Build
             #   run: pnpm run build
-            - name: Deploy gh-pages
-              run: pnpm run deploy
+            - name: Deploy
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./packages/site/build
+            # - name: Deploy gh-pages
+            #   run: pnpm run deploy
