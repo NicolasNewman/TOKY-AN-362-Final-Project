@@ -1,5 +1,6 @@
 {
   "name": "@ghibli-analysis/site",
+  "homepage": "https://nicolasnewman.github.io/TOKY-AN-362-Final-Project",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,9 +24,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "fbuild": "react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build -a"
   },
   "eslintConfig": {
     "extends": [

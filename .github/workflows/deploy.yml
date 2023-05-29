@@ -1,0 +1,18 @@
+name: deploy
+on:
+    push: { branches: [master] }
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: 📥 Monorepo install
+              uses: ./.github/actions/pnpm-install
+            # - name: Build
+            #   run: pnpm run build
+            - name: Deploy gh-pages
+              run: pnpm run deploy

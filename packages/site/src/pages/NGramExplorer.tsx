@@ -50,7 +50,7 @@ const columnsReviews: ColumnsType<TableReview> = [
 	},
 ];
 
-const NGramExplorer: React.FC = ({}) => {
+const NGramExplorer: React.FC = () => {
 	const [movieId, setMovieId] = useState<null | MovieId>(null);
 	const [ngramId, setNGram] = useState<null | NGramId>(null);
 	const [selectedNGram, setSelectedNGram] = useState<null | (TableNGram & { opinion: 'pos' | 'neg' })>(null);
