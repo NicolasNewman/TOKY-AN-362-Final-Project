@@ -1,0 +1,27 @@
+{
+  "name": "@ghibli-analysis/scrape",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "export GOOGLE_APPLICATION_CREDENTIALS=\"./auth.json\" && ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ghibli-analysis/shared": "workspace:*",
+    "@google-cloud/translate": "^7.2.1",
+    "@vitalets/google-translate-api": "^9.2.0",
+    "apify": "^3.1.4",
+    "crawlee": "^3.3.2",
+    "http-proxy-agent": "^7.0.0",
+    "playwright": "^1.33.0",
+    "puppeteer": "^20.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.1.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}

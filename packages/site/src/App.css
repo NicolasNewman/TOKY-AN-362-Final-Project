@@ -1,0 +1,11 @@
+.App {
+	text-align: center;
+}
+
+.App .ant-pagination {
+	justify-content: center;
+}
+
+.App .ant-card-body {
+	padding: 0;
+}

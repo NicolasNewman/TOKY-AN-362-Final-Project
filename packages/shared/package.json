@@ -1,0 +1,18 @@
+{
+  "name": "@ghibli-analysis/shared",
+  "version": "1.0.0",
+  "description": "",
+  "private": "true",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "lint:fix": "eslint --fix .",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
