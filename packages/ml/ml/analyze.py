@@ -75,7 +75,8 @@ def make_ngram(df: pd.DataFrame, pairsize = 3, cnt = 10):
     words = [wnl.lemmatize(word) for word in words if word not in stopwords]
     ngrams = (pd.Series(nltk.ngrams(words, pairsize)).value_counts())[:cnt]
     return  [
-        {'ngram': ' '.join(ngram), 'occurence': occurence}
+        # {'ngram': ' '.join(ngram), 'occurence': occurence}
+        {'ngram': ' '.join(ngram), 'occurence': df['reviewENClean'].str.contains(' '.join(ngram)).sum()}
         for ngram,occurence in list(ngrams.items())
     ]
 
