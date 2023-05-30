@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.css": "/static/css/main.d7dfcefa.css",
-    "main.js": "/static/js/main.51e0e644.js",
-    "static/js/41.5c4f57f1.chunk.js": "/static/js/41.5c4f57f1.chunk.js",
-    "static/media/161722.jpg": "/static/media/161722.55416497357b470bbf13.jpg",
-    "static/media/150436.jpg": "/static/media/150436.96a427a86ac2171e3af3.jpg",
-    "static/media/240799.jpg": "/static/media/240799.d092f10e085d634880c9.jpg",
-    "static/media/89778.jpg": "/static/media/89778.ab0d33e529d0f8361a9e.jpg",
-    "static/media/335800.jpg": "/static/media/335800.f9869ebdeb8b161a7e79.jpg",
-    "static/media/159561.jpg": "/static/media/159561.65664aacb4c5cf3ae51c.jpg",
-    "static/media/327529.jpg": "/static/media/327529.1ee1682e163e7658b2fe.jpg",
-    "static/media/152271.jpg": "/static/media/152271.357c6db89c56063b5f4f.jpg",
-    "static/media/163027.jpg": "/static/media/163027.4bb8083772712b0026b0.jpg",
-    "static/media/148901.jpg": "/static/media/148901.c6c624617cf2e3c60075.jpg",
-    "static/media/89972.jpg": "/static/media/89972.62a0794d6448b969f475.jpg",
-    "static/media/150435.jpg": "/static/media/150435.3507e3c0017a3cd78104.jpg",
-    "static/media/151441.jpg": "/static/media/151441.ec8f404fa7c53555cd76.jpg",
-    "static/media/149868.jpg": "/static/media/149868.a92ffc9015770e443c17.jpg",
-    "static/media/344584.jpg": "/static/media/344584.db697989b7687c9dc24b.jpg",
-    "index.html": "/index.html",
-    "main.d7dfcefa.css.map": "/static/css/main.d7dfcefa.css.map",
-    "main.51e0e644.js.map": "/static/js/main.51e0e644.js.map",
-    "41.5c4f57f1.chunk.js.map": "/static/js/41.5c4f57f1.chunk.js.map"
+    "main.css": "/TOKY-AN-362-Final-Project/static/css/main.d7dfcefa.css",
+    "main.js": "/TOKY-AN-362-Final-Project/static/js/main.686a41df.js",
+    "static/js/41.5c4f57f1.chunk.js": "/TOKY-AN-362-Final-Project/static/js/41.5c4f57f1.chunk.js",
+    "static/media/161722.jpg": "/TOKY-AN-362-Final-Project/static/media/161722.55416497357b470bbf13.jpg",
+    "static/media/150436.jpg": "/TOKY-AN-362-Final-Project/static/media/150436.96a427a86ac2171e3af3.jpg",
+    "static/media/240799.jpg": "/TOKY-AN-362-Final-Project/static/media/240799.d092f10e085d634880c9.jpg",
+    "static/media/89778.jpg": "/TOKY-AN-362-Final-Project/static/media/89778.ab0d33e529d0f8361a9e.jpg",
+    "static/media/335800.jpg": "/TOKY-AN-362-Final-Project/static/media/335800.f9869ebdeb8b161a7e79.jpg",
+    "static/media/159561.jpg": "/TOKY-AN-362-Final-Project/static/media/159561.65664aacb4c5cf3ae51c.jpg",
+    "static/media/327529.jpg": "/TOKY-AN-362-Final-Project/static/media/327529.1ee1682e163e7658b2fe.jpg",
+    "static/media/152271.jpg": "/TOKY-AN-362-Final-Project/static/media/152271.357c6db89c56063b5f4f.jpg",
+    "static/media/163027.jpg": "/TOKY-AN-362-Final-Project/static/media/163027.4bb8083772712b0026b0.jpg",
+    "static/media/148901.jpg": "/TOKY-AN-362-Final-Project/static/media/148901.c6c624617cf2e3c60075.jpg",
+    "static/media/89972.jpg": "/TOKY-AN-362-Final-Project/static/media/89972.62a0794d6448b969f475.jpg",
+    "static/media/150435.jpg": "/TOKY-AN-362-Final-Project/static/media/150435.3507e3c0017a3cd78104.jpg",
+    "static/media/151441.jpg": "/TOKY-AN-362-Final-Project/static/media/151441.ec8f404fa7c53555cd76.jpg",
+    "static/media/149868.jpg": "/TOKY-AN-362-Final-Project/static/media/149868.a92ffc9015770e443c17.jpg",
+    "static/media/344584.jpg": "/TOKY-AN-362-Final-Project/static/media/344584.db697989b7687c9dc24b.jpg",
+    "index.html": "/TOKY-AN-362-Final-Project/index.html",
+    "main.d7dfcefa.css.map": "/TOKY-AN-362-Final-Project/static/css/main.d7dfcefa.css.map",
+    "main.686a41df.js.map": "/TOKY-AN-362-Final-Project/static/js/main.686a41df.js.map",
+    "41.5c4f57f1.chunk.js.map": "/TOKY-AN-362-Final-Project/static/js/41.5c4f57f1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d7dfcefa.css",
-    "static/js/main.51e0e644.js"
+    "static/js/main.686a41df.js"
   ]
 }
