@@ -1,6 +1,10 @@
 {
-    "editor.formatOnSave": true,
+	"editor.formatOnSave": true,
 	"javascript.format.enable": true,
 	"typescript.format.enable": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"python.defaultInterpreterPath": "/home/nicolas/projects/GhibliAnalysis/packages/ml/.venv",
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.python"
+	}
 }
