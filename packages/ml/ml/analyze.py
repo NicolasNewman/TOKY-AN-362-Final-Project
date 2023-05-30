@@ -7,6 +7,8 @@ from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
 # nltk.download('wordnet')
 
 df = pd.read_json('../shared/src/raw.json')
+df = df[df.columns.drop('review')]
+
 
 stopwords = []
 # stopwords = ["sosuke", "ashitaka", "ichihiro", "spirited", "chihiro", "turnip", "calcifer", "sophie", "ve", "hayao", "haku", "crayon"]

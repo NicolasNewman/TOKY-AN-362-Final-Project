@@ -7,7 +7,7 @@ export interface Review {
 	reviewer: string;
 	rating: number;
 	title: string;
-	review: string;
+	review?: string;
 	reviewEN?: string;
 	reviewENClean?: string;
 	source?: string;
