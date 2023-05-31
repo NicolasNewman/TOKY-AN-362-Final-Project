@@ -1,10 +1,11 @@
 import React from 'react';
 import { ResponsiveChord } from '@nivo/chord';
-import { data, movieIdToName } from '@ghibli-analysis/shared/dist/web';
+import { movieIdToName } from '@ghibli-analysis/shared/dist/web';
 import { getEntries } from '../lib/object';
+import Movies from '../lib/data';
 
 // const references = getEntries(data).map(([movieId, data]) => Object.values(data.stats.references));
-const references2 = getEntries(data).map(([movieId, data]) =>
+const references2 = getEntries(Movies).map(([movieId, data]) =>
 	getEntries(data.stats.references).map(
 		([movieId2, references]) => Math.round((references / data.reviews.length) * 1e4) / 1e2,
 	),

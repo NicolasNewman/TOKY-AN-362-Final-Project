@@ -1,6 +1,6 @@
-import { Data } from '@ghibli-analysis/shared/dist/web';
+import { Movie } from '@ghibli-analysis/shared/dist/web';
 import React from 'react';
-import Movie from './Movie';
+import MovieDisplay from './MovieDisplay';
 import { getEntries } from '../lib/object';
 import { ResponsiveBar } from '@nivo/bar';
 //@ts-ignore
@@ -8,7 +8,7 @@ import { ResponsiveBoxPlot } from '@nivo/boxplot';
 import Stat from './Stat';
 
 interface IProps {
-	movie: Data;
+	movie: Movie;
 }
 
 const MovieAnalysis: React.FC<IProps> = ({ movie }) => {
@@ -36,7 +36,7 @@ const MovieAnalysis: React.FC<IProps> = ({ movie }) => {
 		<div className="h-full flex flex-col items-center w-full top-20">
 			{/* <div className="h-full flex flex-col items-center w-[inherit] fixed top-20"> */}
 			<div className="w-1/2">
-				<Movie movie={movie} />
+				<MovieDisplay movie={movie} />
 			</div>
 			<div className="mt-4 h-[250px] w-full">
 				<div>Positive v. Negative Movie Reviews by Year</div>
