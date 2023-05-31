@@ -1,4 +1,4 @@
-import { Data, movieIdToName } from '@ghibli-analysis/shared/dist/web';
+import { Movie, movieIdToName } from '@ghibli-analysis/shared/dist/web';
 import React from 'react';
 import { round } from '../lib/math';
 import { Card } from 'antd';
@@ -7,10 +7,10 @@ import { StarOutlined } from '@ant-design/icons';
 import Stat from './Stat';
 
 interface IProps {
-	movie: Data;
+	movie: Movie;
 }
 
-const Movie: React.FC<IProps> = ({ movie }) => {
+const MovieDisplay: React.FC<IProps> = ({ movie }) => {
 	const movieName = movieIdToName[movie.movieId];
 	const { n, avg, nPositive, nNegative, nMixed } = movie.stats;
 	return (
@@ -57,4 +57,4 @@ const Movie: React.FC<IProps> = ({ movie }) => {
 	);
 };
 
-export default Movie;
+export default MovieDisplay;

@@ -1,9 +1,10 @@
-import { Data, data } from '@ghibli-analysis/shared/dist/web';
-import Movie from '../components/Movie';
+import { Movie } from '@ghibli-analysis/shared/dist/web';
 import { Select } from 'antd';
 import { useState } from 'react';
 import { BaseOptionType } from 'antd/es/select';
 import MovieAnalysis from '../components/MovieAnalysis';
+import Movies from '../lib/data';
+import MovieDisplay from '../components/MovieDisplay';
 
 type OrderValue = 'asc' | 'dec';
 interface OrderOptionType extends BaseOptionType {
@@ -18,8 +19,8 @@ interface SortOptionType extends BaseOptionType {
 }
 
 const Overview: React.FC = () => {
-	const movies = Object.values(data);
-	const [aMovie, setAMovie] = useState<Data | null>(null);
+	const movies = Object.values(Movies);
+	const [aMovie, setAMovie] = useState<Movie | null>(null);
 	const [orderValue, setOrderValue] = useState<OrderValue>('dec');
 	const [sortValue, setSortValue] = useState<SortValue>('average');
 	return (
@@ -76,7 +77,7 @@ const Overview: React.FC = () => {
 						})
 						.map((movie) => (
 							<div key={movie.movieId} className="cursor-pointer" onClick={() => setAMovie(movie)}>
-								<Movie movie={movie} />
+								<MovieDisplay movie={movie} />
 							</div>
 						))}
 				</div>

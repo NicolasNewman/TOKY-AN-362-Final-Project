@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import parse from 'html-react-parser';
-import { MovieId, NGram, NGramId, data, movieIdToName } from '@ghibli-analysis/shared/dist/web';
+import { MovieId, NGram, NGramId, movieIdToName } from '@ghibli-analysis/shared/dist/web';
 import { Select, Steps, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import Movies from '../lib/data';
 
 interface TableNGram {
 	key: string;
@@ -86,7 +87,7 @@ const NGramExplorer: React.FC = () => {
 	let ngrams = <></>;
 	let reviews = <></>;
 	if (movieId && ngramId) {
-		const movie = data[movieId];
+		const movie = Movies[movieId];
 		const posNGram = movie.positiveNGrams[ngramId];
 		const negNGram = movie.negativeNGrams[ngramId];
 		const { nPositive, nNegative } = movie.stats;
