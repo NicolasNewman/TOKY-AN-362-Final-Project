@@ -16,6 +16,10 @@ jobs:
               uses: ./.github/actions/pnpm-install
             # - name: Build
             #   run: pnpm run build
+            - name: Copy
+              run: |
+                  cp ./packages/shared/src/data.json ./packages/site/build
+                  cp ./README.md ./packages/site/build
             - name: Deploy
               uses: peaceiris/actions-gh-pages@v3
               with:
