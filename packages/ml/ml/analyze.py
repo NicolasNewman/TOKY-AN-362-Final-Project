@@ -8,6 +8,7 @@ from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
 
 df = pd.read_json('../shared/src/raw.json')
 df = df[df.columns.drop('review')]
+df = df[df.columns.drop('title')]
 
 
 stopwords = []
@@ -131,73 +132,71 @@ for movieId in df["movieId"].unique():
     n1 = make_ngram(negative, 1, 30)
 
     years = {k: [] for k in dict.fromkeys(pd.to_datetime(subset['publishDate']).dt.year.unique())}
-    pos,neg,reviews,_ = zip(*[
-            [
-                f"m{movieId}[{i}]" if v["rating"] > 3 else None,
-                f"m{movieId}[{i}]" if v["rating"] < 3 else None,
-                f"m{movieId}[{i}]",
-                years[pd.to_datetime(v['publishDate']).year].append(f"m{movieId}[{i}]")
+    # pos,neg,reviews,_ = zip(*[
+    #         [
+    #             f"m{movieId}[{i}]" if v["rating"] > 3 else None,
+    #             f"m{movieId}[{i}]" if v["rating"] < 3 else None,
+    #             f"m{movieId}[{i}]",
+    #             years[pd.to_datetime(v['publishDate']).year].append(f"m{movieId}[{i}]")
 
-        ] 
-        for [i,v] in enumerate(subset.to_dict(orient='records'))
-    ])
-    pos = [x for x in list(pos) if x is not None]
-    neg = [x for x in list(neg) if x is not None]
-    movieReviews.append(f"const m{movieId}: Review[] = {subset.to_dict(orient='records')}")
+    #     ] 
+    #     for [i,v] in enumerate(subset.to_dict(orient='records'))
+    # ])
+    # pos = [x for x in list(pos) if x is not None]
+    # neg = [x for x in list(neg) if x is not None]
+    # movieReviews.append(subset.to_dict(orient='records'))
     strong['reviewEN'] = strong['reviewEN'].str.lower()
     d = {
-        'movieId': movieId,
-        'dor': movieIdToDOR[movieId],
-        'reviews': CustomList(reviews),
-        'positive': CustomList(pos),
-        'negative': CustomList(neg),
-        'reviewByYears': CustomDictList(years),
-        'stats': {
-            'avg': round(subset['rating'].mean(), 2),
-            'avgStrong': round(subset[subset['rating'].ne(3)]['rating'].mean(), 2),
-            'n': subset['rating'].count(),
-            'nPositive': positive['rating'].count(),
-            'nNegative': negative['rating'].count(),
-            'nStrong': positive['rating'].count() + negative['rating'].count(),
-            'nMixed': mixed['rating'].count(),
+        "movieId": movieId,
+        "dor": movieIdToDOR[movieId],
+        "reviews": subset.to_dict(orient="records"),
+        "stats": {
+            "avg": round(subset["rating"].mean(), 2),
+            "avgStrong": round(subset[subset["rating"].ne(3)]["rating"].mean(), 2),
+            "n": subset["rating"].count(),
+            "nPositive": positive["rating"].count(),
+            "nNegative": negative["rating"].count(),
+            "nStrong": positive["rating"].count() + negative["rating"].count(),
+            "nMixed": mixed["rating"].count(),
             "references": {
-                '163027': strong['reviewEN'].str.contains(movieIdToIdentifier[163027]).sum(),
-                '159561': strong['reviewEN'].str.contains(movieIdToIdentifier[159561]).sum(),
-                '327529': strong['reviewEN'].str.contains(movieIdToIdentifier[327529]).sum(),
-                '335800': strong['reviewEN'].str.contains(movieIdToIdentifier[335800]).sum(),
-                '240799': strong['reviewEN'].str.contains(movieIdToIdentifier[240799]).sum(),
-                '150435': strong['reviewEN'].str.contains(movieIdToIdentifier[150435]).sum(),
-                '89972': strong['reviewEN'].str.contains(movieIdToIdentifier[89972]).sum(),
-                '149868': strong['reviewEN'].str.contains(movieIdToIdentifier[149868]).sum(),
-                '89778': strong['reviewEN'].str.contains(movieIdToIdentifier[89778]).sum(),
-                '148901': strong['reviewEN'].str.contains(movieIdToIdentifier[148901]).sum(),
-                '150436': strong['reviewEN'].str.contains(movieIdToIdentifier[150436]).sum(),
-                '152271': strong['reviewEN'].str.contains(movieIdToIdentifier[152271]).sum(),
-                '344584': strong['reviewEN'].str.contains(movieIdToIdentifier[344584]).sum(),
-                '151441': strong['reviewEN'].str.contains(movieIdToIdentifier[151441]).sum(),
-                '161722': strong['reviewEN'].str.contains(movieIdToIdentifier[161722]).sum()
+                "163027": strong["reviewEN"].str.contains(movieIdToIdentifier[163027]).sum(),
+                "159561": strong["reviewEN"].str.contains(movieIdToIdentifier[159561]).sum(),
+                "327529": strong["reviewEN"].str.contains(movieIdToIdentifier[327529]).sum(),
+                "335800": strong["reviewEN"].str.contains(movieIdToIdentifier[335800]).sum(),
+                "240799": strong["reviewEN"].str.contains(movieIdToIdentifier[240799]).sum(),
+                "150435": strong["reviewEN"].str.contains(movieIdToIdentifier[150435]).sum(),
+                "89972": strong["reviewEN"].str.contains(movieIdToIdentifier[89972]).sum(),
+                "149868": strong["reviewEN"].str.contains(movieIdToIdentifier[149868]).sum(),
+                "89778": strong["reviewEN"].str.contains(movieIdToIdentifier[89778]).sum(),
+                "148901": strong["reviewEN"].str.contains(movieIdToIdentifier[148901]).sum(),
+                "150436": strong["reviewEN"].str.contains(movieIdToIdentifier[150436]).sum(),
+                "152271": strong["reviewEN"].str.contains(movieIdToIdentifier[152271]).sum(),
+                "344584": strong["reviewEN"].str.contains(movieIdToIdentifier[344584]).sum(),
+                "151441": strong["reviewEN"].str.contains(movieIdToIdentifier[151441]).sum(),
+                "161722": strong["reviewEN"].str.contains(movieIdToIdentifier[161722]).sum()
             },
         },
-        'positiveNGrams': {
-            '1': p1,
-            '2': p2,
-            '3': p3
+        "positiveNGrams": {
+            "1": p1,
+            "2": p2,
+            "3": p3
         },
-        'negativeNGrams': {           
-            '1': n1,
-            '2': n2,
-            '3': n3,           
+        "negativeNGrams": {           
+            "1": n1,
+            "2": n2,
+            "3": n3,           
         }
     }
     d['stats']['references'][f'{movieId}'] = 0
     data.append(d)
+
+contentJSON = str(CustomListDict([f""""{d['movieId']}": {json.dumps(d, default=str, ensure_ascii=False)}""" for d in data]))
 
 content = f"""
 /* eslint-disable quotes */
 /* eslint-disable max-len */
 import {{ Data, Review }} from './types';
 
-{";".join(movieReviews)}
 export type MovieId = {' | '.join(movieIds)};
 export const movieIdToName: {{[key in MovieId]: string}} = {{
     163027: 'Spirited Away',
@@ -233,8 +232,9 @@ export const movieIdToIdentifier: {{[key in MovieId]: string}} = {{
     151441: 'only yesterday',
     161722: 'yamadas'
 }};
-export const data: {{[key in MovieId]: Data}} = {CustomListDict([f"'{d['movieId']}': {d}" for d in data])}
 """
 
+with open('../shared/src/data.json', 'w') as writer:
+    writer.write(contentJSON)
 with open('../shared/src/data.ts', 'w') as writer:
     writer.write(content)
