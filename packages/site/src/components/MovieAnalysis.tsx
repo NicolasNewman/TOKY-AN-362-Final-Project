@@ -6,6 +6,7 @@ import { ResponsiveBar } from '@nivo/bar';
 //@ts-ignore
 import { ResponsiveBoxPlot } from '@nivo/boxplot';
 import Stat from './Stat';
+import { ResponsiveNetwork } from '@nivo/network';
 
 interface IProps {
 	movie: Movie;
@@ -97,6 +98,16 @@ const MovieAnalysis: React.FC<IProps> = ({ movie }) => {
 					theme={{
 						tooltip: { basic: { color: '#000' }, container: { color: '#000' } },
 						axis: { ticks: { text: { fill: '#fff' } } },
+					}}
+				/>
+
+				<ResponsiveNetwork
+					data={movie.negativeHotwords}
+					nodeSize={(n) => n.weight}
+					repulsivity={6}
+					nodeColor={(n) => {
+						const num = Math.ceil(Math.abs(n.polarity * 255));
+						return `rgb(${num},${num},${num})`;
 					}}
 				/>
 			</div>
