@@ -3,6 +3,83 @@ import nltk
 import re
 import json
 from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
+import spacy
+from spacy.matcher import Matcher
+from spacy.tokens import Span, Token, Doc
+from spacy.language import Language
+from spacytextblob.spacytextblob import SpacyTextBlob
+from collections import Counter
+from string import punctuation
+# from typing import List, Dict, overload, Any
+from spacy import displacy
+from ml.network import WordNet
+# https://www.analyticsvidhya.com/blog/2022/03/keyword-extraction-methods-from-documents-in-nlp/
+# print(spacy.prefer_gpu())
+
+PROPN = ['hayao', 'miyazaki', 'mononoke']
+@Language.component("custom_pos")
+def custom_pos(doc: Doc):
+    for token in doc:
+        if token.text in PROPN:
+            token.pos_ = 'PROPN'
+    return doc
+
+
+nlp = spacy.load("en_core_web_sm")
+nlp_coref = spacy.load("en_coreference_web_trf")
+
+nlp_coref.replace_listeners("transformer", "coref", ["model.tok2vec"])
+nlp_coref.replace_listeners("transformer", "span_resolver", ["model.tok2vec"])
+
+# we won't copy over the span cleaner
+nlp.add_pipe("coref", source=nlp_coref)
+nlp.add_pipe("span_resolver", source=nlp_coref)
+nlp.add_pipe('spacytextblob')
+
+matcher = Matcher(nlp.vocab)
+patterns = [
+    [{"POS": "ADJ"}, {"POS": "NOUN"}],
+    [{"POS": "ADJ"}, {"POS": "VERB"}],
+    [{"POS": "VERB"}, {"POS": "NOUN"}],
+    [{"POS": "VERB"}, {"POS": "ADJ"}],
+    [{"POS": "NOUN"}, {"POS": "ADJ"}],
+    [{"POS": "NOUN"}, {"POS": "NOUN"}],
+]
+matcher.add('keywords', patterns)
+
+def is_stop(token: Token):
+    return token.text in nlp.Defaults.stop_words or token.text in punctuation
+ 
+def is_ly_adv(token: Token):
+    return token.pos_ == 'ADV' and token.text.endswith('ly')
+
+def get_hotwords(series: pd.Series):
+    series = series.str.lower()
+    reviews = series.to_list()
+    pos_tag = ['PROPN', 'ADJ', 'NOUN', 'VERB']
+    pos_network = WordNet()
+    neg_network = WordNet()
+
+    for review in reviews:
+        doc = nlp(review)
+        for token in doc:
+            if(token.text in nlp.Defaults.stop_words or (token.pos_ not in pos_tag and not is_ly_adv(token))):
+                continue
+            polarity = token._.blob.polarity
+            if (polarity >= 0.0):
+                token_node = pos_network.add(token.text, token._.blob.polarity)
+                for child in list(token.children):
+                    if (child.text not in nlp.Defaults.stop_words and child.pos_ in pos_tag ):
+                        child_node = pos_network.add(child.text, child._.blob.polarity)
+                        pos_network.add(token_node, child_node)
+            if (polarity <= 0.0):
+                token_node = neg_network.add(token.text, token._.blob.polarity)
+                for child in list(token.children):
+                    if (child.text not in nlp.Defaults.stop_words and child.pos_ in pos_tag ):
+                        child_node = neg_network.add(child.text, child._.blob.polarity)
+                        neg_network.add(token_node, child_node)
+    return [pos_network, neg_network]
+
 
 # nltk.download('wordnet')
 
@@ -116,7 +193,9 @@ class CustomDictList(dict[any, list]):
 movieReviews = []
 data = []
 movieIds = []
-for movieId in df["movieId"].unique():
+unique = df["movieId"].unique()
+for i,movieId in enumerate(unique):
+    print(f'Processing [{movieId}] ({i + 1}/{len(unique)})')
     movieIds.append(str(movieId))
     subset = df[df["movieId"].eq(movieId)]
     negative = subset[subset["rating"].le(2)]
@@ -131,20 +210,9 @@ for movieId in df["movieId"].unique():
     n2 = make_ngram(negative, 2, 30)
     n1 = make_ngram(negative, 1, 30)
 
-    years = {k: [] for k in dict.fromkeys(pd.to_datetime(subset['publishDate']).dt.year.unique())}
-    # pos,neg,reviews,_ = zip(*[
-    #         [
-    #             f"m{movieId}[{i}]" if v["rating"] > 3 else None,
-    #             f"m{movieId}[{i}]" if v["rating"] < 3 else None,
-    #             f"m{movieId}[{i}]",
-    #             years[pd.to_datetime(v['publishDate']).year].append(f"m{movieId}[{i}]")
+    [pos_hw, neg_hw] = get_hotwords(positive['reviewEN'])
 
-    #     ] 
-    #     for [i,v] in enumerate(subset.to_dict(orient='records'))
-    # ])
-    # pos = [x for x in list(pos) if x is not None]
-    # neg = [x for x in list(neg) if x is not None]
-    # movieReviews.append(subset.to_dict(orient='records'))
+    years = {k: [] for k in dict.fromkeys(pd.to_datetime(subset['publishDate']).dt.year.unique())}
     strong['reviewEN'] = strong['reviewEN'].str.lower()
     d = {
         "movieId": movieId,
@@ -181,11 +249,13 @@ for movieId in df["movieId"].unique():
             "2": p2,
             "3": p3
         },
+        "positiveHotwords": pos_hw.to_dict(),
         "negativeNGrams": {           
             "1": n1,
             "2": n2,
             "3": n3,           
-        }
+        },
+        "negativeHotwords": neg_hw.to_dict()
     }
     d['stats']['references'][f'{movieId}'] = 0
     data.append(d)
