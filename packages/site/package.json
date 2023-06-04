@@ -9,6 +9,7 @@
     "@nivo/bar": "^0.83.0",
     "@nivo/boxplot": "^0.83.0",
     "@nivo/chord": "^0.83.0",
+    "@nivo/network": "^0.83.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.30",
     "@types/react": "^18.2.6",
