@@ -22,6 +22,19 @@ export interface NGram {
 	// absoluteOccurence: number;
 }
 
+export interface Network {
+	nodes: {
+		id: string;
+		weight: number;
+		polarity: number;
+	}[];
+	links: {
+		source: string;
+		target: string;
+		weight: string;
+	}[];
+}
+
 export interface Stats {
 	avg: number;
 	avgStrong: number;
@@ -43,11 +56,13 @@ export interface BaseMovie {
 		'2': NGram[];
 		'3': NGram[];
 	};
+	positiveHotwords: Network;
 	negativeNGrams: {
 		'1': NGram[];
 		'2': NGram[];
 		'3': NGram[];
 	};
+	negativeHotwords: Network;
 }
 
 export const isBaseMovie = (d: unknown): d is BaseMovie => {
