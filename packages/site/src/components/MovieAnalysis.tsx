@@ -6,13 +6,14 @@ import { ResponsiveBar } from '@nivo/bar';
 //@ts-ignore
 import { ResponsiveBoxPlot } from '@nivo/boxplot';
 import Stat from './Stat';
-import { ResponsiveNetwork } from '@nivo/network';
+import { ResponsiveNetworkCanvas } from '@nivo/network';
 
 interface IProps {
 	movie: Movie;
 }
 
 const MovieAnalysis: React.FC<IProps> = ({ movie }) => {
+	console.log(movie);
 	const barData = getEntries(movie.reviewByYears).map(([year, reviews]) => ({
 		year,
 		Positive: reviews.filter((r) => r.rating > 3).length,
@@ -101,13 +102,28 @@ const MovieAnalysis: React.FC<IProps> = ({ movie }) => {
 					}}
 				/>
 
-				<ResponsiveNetwork
+				<div className="my-2">AAAAAAAAAAAAAAA</div>
+				<ResponsiveNetworkCanvas
 					data={movie.negativeHotwords}
+					//@ts-ignore
 					nodeSize={(n) => n.weight}
 					repulsivity={6}
 					nodeColor={(n) => {
+						//@ts-ignore
 						const num = Math.ceil(Math.abs(n.polarity * 255));
-						return `rgb(${num},${num},${num})`;
+						return `rgb(${num},0,0)`;
+					}}
+					iterations={30}
+					theme={{
+						tooltip: {
+							basic: {
+								color: '#000',
+							},
+							container: {
+								color: '#000',
+							},
+						},
+						background: '#fff',
 					}}
 				/>
 			</div>

@@ -17,6 +17,7 @@
     "antd": "^5.5.0",
     "html-react-parser": "^3.0.16",
     "react": "^18.2.0",
+    "react-code-blocks": "0.0.9-0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
@@ -25,7 +26,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "sbuild": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build -a"
