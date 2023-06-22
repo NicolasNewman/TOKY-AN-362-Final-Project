@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/TOKY-AN-362-Final-Project/static/css/main.d7dfcefa.css",
-    "main.js": "/TOKY-AN-362-Final-Project/static/js/main.d601b7f2.js",
+    "main.css": "/TOKY-AN-362-Final-Project/static/css/main.e426a5c8.css",
+    "main.js": "/TOKY-AN-362-Final-Project/static/js/main.d35eff77.js",
     "static/js/41.5c4f57f1.chunk.js": "/TOKY-AN-362-Final-Project/static/js/41.5c4f57f1.chunk.js",
     "static/media/161722.jpg": "/TOKY-AN-362-Final-Project/static/media/161722.55416497357b470bbf13.jpg",
     "static/media/150436.jpg": "/TOKY-AN-362-Final-Project/static/media/150436.96a427a86ac2171e3af3.jpg",
@@ -19,12 +19,12 @@
     "static/media/149868.jpg": "/TOKY-AN-362-Final-Project/static/media/149868.a92ffc9015770e443c17.jpg",
     "static/media/344584.jpg": "/TOKY-AN-362-Final-Project/static/media/344584.db697989b7687c9dc24b.jpg",
     "index.html": "/TOKY-AN-362-Final-Project/index.html",
-    "main.d7dfcefa.css.map": "/TOKY-AN-362-Final-Project/static/css/main.d7dfcefa.css.map",
-    "main.d601b7f2.js.map": "/TOKY-AN-362-Final-Project/static/js/main.d601b7f2.js.map",
+    "main.e426a5c8.css.map": "/TOKY-AN-362-Final-Project/static/css/main.e426a5c8.css.map",
+    "main.d35eff77.js.map": "/TOKY-AN-362-Final-Project/static/js/main.d35eff77.js.map",
     "41.5c4f57f1.chunk.js.map": "/TOKY-AN-362-Final-Project/static/js/41.5c4f57f1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d7dfcefa.css",
-    "static/js/main.d601b7f2.js"
+    "static/css/main.e426a5c8.css",
+    "static/js/main.d35eff77.js"
   ]
 }
