@@ -247,6 +247,19 @@ tornado = ">=5.1"
 xyzservices = ">=2021.09.1"
 
 [[package]]
+name = "bs4"
+version = "0.0.1"
+description = "Dummy package for Beautiful Soup"
+optional = false
+python-versions = "*"
+files = [
+    {file = "bs4-0.0.1.tar.gz", hash = "sha256:36ecea1fd7cc5c0c6e4a1ff075df26d50da647b75376626cc186e2212886dd3a"},
+]
+
+[package.dependencies]
+beautifulsoup4 = "*"
+
+[[package]]
 name = "catalogue"
 version = "2.0.8"
 description = "Super lightweight function registries for your library"
@@ -1282,6 +1295,17 @@ widgetsnbextension = ">=4.0.7,<4.1.0"
 
 [package.extras]
 test = ["ipykernel", "jsonschema", "pytest (>=3.6.0)", "pytest-cov", "pytz"]
+
+[[package]]
+name = "iso639-lang"
+version = "2.1.0"
+description = "A lightweight library for the ISO 639 standard."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "iso639-lang-2.1.0.tar.gz", hash = "sha256:8458e4b45bff6e8d449afc35ff9b5aaefb954400fe93a39f71c37e5b766e9856"},
+    {file = "iso639_lang-2.1.0-py3-none-any.whl", hash = "sha256:abaa4df7aeee0368e6b2b62b149eded5b005a4fea1c1d16e606d4820dcc51cf6"},
+]
 
 [[package]]
 name = "isoduration"
@@ -2857,6 +2881,26 @@ files = [
 
 [package.extras]
 plugins = ["importlib-metadata"]
+
+[[package]]
+name = "pymultidictionary"
+version = "1.2.2"
+description = "PyMultiDictionary is a Dictionary Module for Python 2 to get meanings, translations, synonyms and antonyms of words in 20 different languages"
+optional = false
+python-versions = ">=3.7, <4"
+files = [
+    {file = "PyMultiDictionary-1.2.2-py3-none-any.whl", hash = "sha256:340bb2f9a988bd85aa02264d590dc89531a108d0b0b00b1a2e33b3f57655585d"},
+    {file = "PyMultiDictionary-1.2.2.tar.gz", hash = "sha256:adeb93acc1d90c4f75dfb179af5b1242da2e42f73854f95633d059b59307aa1c"},
+]
+
+[package.dependencies]
+bs4 = "*"
+iso639-lang = "*"
+requests = "*"
+
+[package.extras]
+docs = ["sphinx", "sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
+test = ["nose2[coverage-plugin]"]
 
 [[package]]
 name = "pyparsing"
@@ -4606,4 +4650,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b0395d5f4807ca17a4fe2c131080f6073b67fb98822a5d232b304a4a8791cef3"
+content-hash = "e05fda694f2e8fc719bb2830b9dd524422160ae75d97674e0da7a0461e3a423c"
