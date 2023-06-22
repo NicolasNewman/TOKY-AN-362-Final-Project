@@ -32,7 +32,7 @@ export interface Network {
 	links: {
 		source: string;
 		target: string;
-		weight: string;
+		weight: number;
 		polarity: number;
 	}[];
 	maxLinkWeight: number;
