@@ -18,6 +18,7 @@ spacy-experimental = "0.6.1"
 torch = {version = "^2.0.1+cu117", source = "pytorch"}
 torchvision = {version = "^0.15.2+cu117", source = "pytorch"}
 en-coreference-web-trf = {url = "https://github.com/explosion/spacy-experimental/releases/download/v0.6.1/en_coreference_web_trf-3.4.0a2-py3-none-any.whl"}
+pymultidictionary = "^1.2.2"
 
 
 [tool.poetry.group.dev.dependencies]

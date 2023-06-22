@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Testing from './pages/Testing';
 import NGramExplorer from './pages/NGramExplorer';
 import Overview from './pages/Overview';
+import HotwordExplorer from './pages/HotwordExploer';
 
 export default createHashRouter([
 	{
@@ -21,6 +22,10 @@ export default createHashRouter([
 			{
 				path: 'ngrams',
 				element: <NGramExplorer />,
+			},
+			{
+				path: 'hotwords',
+				element: <HotwordExplorer />,
 			},
 			{
 				path: 'testing',

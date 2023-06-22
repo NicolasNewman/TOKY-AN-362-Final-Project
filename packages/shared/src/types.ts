@@ -28,11 +28,14 @@ export interface Network {
 		weight: number;
 		polarity: number;
 	}[];
+	maxNodeWeight: number;
 	links: {
 		source: string;
 		target: string;
-		weight: string;
+		weight: number;
+		polarity: number;
 	}[];
+	maxLinkWeight: number;
 }
 
 export interface Stats {
