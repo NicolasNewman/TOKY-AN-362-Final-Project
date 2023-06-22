@@ -11,3 +11,5 @@ export const shiftRange = (
 ) => {
 	return round(to[0] + ((to[1] - to[0]) / (from[1] - from[0])) * (t - from[0]));
 };
+
+export const btoi = (b: boolean, t: number = 1, f: number = -1) => (b ? t : f);
