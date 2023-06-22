@@ -159,7 +159,7 @@ const HotwordNetwork: React.FC<IProps> = ({ network, focus, setFocus, filter }) 
 				setFocus(n.data.id);
 			}}
 			nodeTooltip={(props) => {
-				const { size } = props.node;
+				// const { size } = props.node;
 				const { id, polarity, weight } = props.node.data;
 
 				const edges = filteredNetwork.links
