@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { MovieId, movieIdToName } from '@ghibli-analysis/shared/dist/web';
-import { InputNumber, Select, Slider } from 'antd';
+import { Button, InputNumber, Select, Slider } from 'antd';
 import Movies from '../lib/data';
 import Route from '../components/Route';
 import { StopOutlined } from '@ant-design/icons';
@@ -12,7 +12,12 @@ const HotwordExplorer: React.FC = () => {
 	const [movieId, setMovieId] = useState<null | MovieId>(null);
 	const [isPos, setIsPos] = useState<boolean>(false);
 
-	const [focus, setFocus] = useState<string | string[] | null>(null);
+	const [wordFocus, setWordFocus] = useState<string | null>(null);
+	const [edgeFocus, setEdgeFocus] = useState<string[] | null>(null);
+
+	const minNodeWeightRef = useRef<HTMLInputElement>(null);
+	const minLinkWeightRef = useRef<HTMLInputElement>(null);
+	const minPolarityRef = useRef<HTMLInputElement>(null);
 
 	const [filter, _setFilter] = useState<NodeFilter>({
 		minPolarity: 0.25,
@@ -57,10 +62,10 @@ const HotwordExplorer: React.FC = () => {
 							/>
 							<div className="flex items-center mb-2">
 								<Select
-									value={typeof focus === 'string' ? focus : focus == null ? null : focus.join('-')}
+									value={typeof wordFocus === 'string' ? wordFocus : null}
 									className="w-full"
 									onChange={(v, opts) => {
-										setFocus(v);
+										setWordFocus(v);
 									}}
 									showSearch={true}
 									options={Movies[movieId][setName].nodes.map((n) => ({
@@ -69,49 +74,50 @@ const HotwordExplorer: React.FC = () => {
 									}))}
 									placeholder={'Find word'}
 									allowClear={true}
-									onClear={() => setFocus('')}
+									onClear={() => setWordFocus('')}
 								/>
 								<StopOutlined
-									disabled={focus === null}
+									disabled={wordFocus === null}
 									className={`${
-										focus === null
+										wordFocus === null
 											? 'text-gray-600 !cursor-not-allowed'
 											: 'text-red-500 hover:text-red-900 !cursor-pointer'
 									} ml-2 `}
-									onClick={() => setFocus(null)}
+									onClick={() => setWordFocus(null)}
 								/>
 							</div>
 							<div className="grid grid-cols-2 justify-items-end border border-gray-600 p-1 rounded">
-								{/* <div> */}
 								<span>Min polarity: </span>
 								<div className="w-full">
-									<Slider
-										min={0.0}
-										max={1.0}
-										step={0.05}
-										value={filter.minPolarity}
-										onAfterChange={(v) => setFilter({ minPolarity: v })}
-									/>
+									<Slider ref={minPolarityRef} min={0.0} max={1.0} step={0.05} defaultValue={0.25} />
 								</div>
-								{/* </div> */}
-								{/* <div> */}
 								<span>Min node weight: </span>
 								<InputNumber
+									ref={minNodeWeightRef}
 									min={0}
 									max={Movies[movieId][setName].maxNodeWeight}
-									value={filter.minNodeWeight}
-									onChange={(v) => setFilter({ minNodeWeight: v ?? 1 })}
+									defaultValue={1}
 								/>
-								{/* </div> */}
-								{/* <div> */}
 								<span>Min link weight: </span>
 								<InputNumber
+									ref={minLinkWeightRef}
 									min={0}
 									max={Movies[movieId][setName].maxLinkWeight}
-									value={filter.minLinkWeight}
-									onChange={(v) => setFilter({ minLinkWeight: v ?? 2 })}
+									defaultValue={2}
 								/>
-								{/* </div> */}
+								<Button
+									type="primary"
+									className="bg-[#1668dc]"
+									onClick={() =>
+										setFilter({
+											minLinkWeight: parseInt(minLinkWeightRef.current?.value ?? '1'),
+											minNodeWeight: parseInt(minNodeWeightRef.current?.value ?? '2'),
+											minPolarity: parseFloat(minPolarityRef.current?.value ?? '0.25'),
+										})
+									}
+								>
+									Submit
+								</Button>
 							</div>
 						</>
 					) : (
@@ -121,16 +127,23 @@ const HotwordExplorer: React.FC = () => {
 				{movieId ? (
 					<HotwordNetwork
 						network={Movies[movieId][setName]}
-						focus={focus}
-						setFocus={setFocus}
+						wordFocus={wordFocus}
+						setWordFocus={setWordFocus}
+						edgeFocus={edgeFocus}
+						setEdgeFocus={setEdgeFocus}
 						filter={filter}
 					/>
 				) : (
 					<></>
 				)}
 			</div>
-			{movieId && focus !== null && typeof focus === 'object' ? (
-				<ReviewList reviews={Movies[movieId].reviews} keywords={focus} polarity={isPos ? 'pos' : 'neg'} />
+			{movieId && edgeFocus !== null ? (
+				<ReviewList
+					close={() => setEdgeFocus(null)}
+					reviews={Movies[movieId].reviews}
+					keywords={edgeFocus}
+					polarity={isPos ? 'pos' : 'neg'}
+				/>
 			) : (
 				<></>
 			)}

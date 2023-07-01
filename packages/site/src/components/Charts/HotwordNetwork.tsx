@@ -11,53 +11,58 @@ export interface NodeFilter {
 
 interface IProps {
 	network: Network;
-	focus: string | string[] | null;
-	setFocus: (focus: string | string[] | null) => void;
+	wordFocus: string | null;
+	setWordFocus: (focus: string | null) => void;
+	edgeFocus: string[] | null;
+	setEdgeFocus: (focus: string[] | null) => void;
 	filter: NodeFilter;
 }
 
-const HotwordNetwork: React.FC<IProps> = ({ network, focus, setFocus, filter }) => {
+const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, edgeFocus, setEdgeFocus, filter }) => {
 	const filteredNetwork = (() => {
 		const nodeNames: { [key: string]: number } = {};
+		const linkNames: { [key: string]: number } = {};
 		let maxLinkWeight = 0;
 		let maxNodeWeight = 0;
 		const temp: Network = {
+			nodes: network.nodes.filter((n) => {
+				if (n.weight < filter.minNodeWeight) return false;
+				if (wordFocus && n.id !== wordFocus) return false;
+
+				maxNodeWeight = Math.max(maxNodeWeight, n.weight);
+				nodeNames[n.id] = 1;
+				return true;
+			}),
 			links: network.links.filter((l) => {
 				const a = Math.abs(l.polarity) < Math.abs(filter.minPolarity);
 				const b = l.weight < filter.minLinkWeight;
 				if (a || b) {
 					return false;
 				}
+				if (nodeNames[l.source] === undefined || nodeNames[l.target] === undefined) {
+					return false;
+				}
 
-				if (typeof focus === 'string') {
-					if (l.source === focus) {
-						nodeNames[l.target] = 1;
-					} else if (l.target === focus) {
-						nodeNames[l.source] = 1;
+				if (wordFocus) {
+					if (l.source === wordFocus) {
+						linkNames[l.target] = 1;
+					} else if (l.target === wordFocus) {
+						linkNames[l.source] = 1;
 					}
-					if (l.source === focus || l.target === focus) {
+					if (l.source === wordFocus || l.target === wordFocus) {
 						maxLinkWeight = Math.max(maxLinkWeight, l.weight);
 						return true;
 					}
 					return false;
 				}
-				nodeNames[l.target] = 1;
-				nodeNames[l.source] = 1;
+				linkNames[l.target] = 1;
+				linkNames[l.source] = 1;
 				return true;
-			}),
-			nodes: network.nodes.filter((n) => {
-				// if (typeof focus === 'string') {
-				if (nodeNames[n.id] || n.id === focus) {
-					maxNodeWeight = Math.max(maxNodeWeight, n.weight);
-					return true;
-				}
-				return false;
-				// }
-				// return true;
 			}),
 			maxLinkWeight,
 			maxNodeWeight,
 		};
+		temp.nodes = temp.nodes.filter((n) => linkNames[n.id] !== undefined);
 		return temp;
 	})();
 	return (
@@ -104,7 +109,7 @@ const HotwordNetwork: React.FC<IProps> = ({ network, focus, setFocus, filter }) 
 						onClick={(e) => {
 							const a = link.source.id;
 							const b = link.target.id;
-							setFocus([a, b]);
+							setEdgeFocus([a, b]);
 						}}
 						cursor={'pointer'}
 					/>
@@ -156,7 +161,7 @@ const HotwordNetwork: React.FC<IProps> = ({ network, focus, setFocus, filter }) 
 				note: n.id,
 			}))}
 			onClick={(n) => {
-				setFocus(n.data.id);
+				setWordFocus(n.data.id);
 			}}
 			nodeTooltip={(props) => {
 				// const { size } = props.node;
