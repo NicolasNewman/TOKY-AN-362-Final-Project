@@ -1,9 +1,15 @@
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Route from '../components/Route';
 
 const Root: React.FC = () => {
 	const loc = useLocation();
+	const nav = useNavigate();
+	useEffect(() => {
+		if (loc.pathname === '/') {
+			nav('/home');
+		}
+	}, [loc.pathname, nav]);
 	if (loc.pathname === '/hotwords') {
 		return (
 			<div className="relative bg-slate-900 min-h-screen min-w-fit">
@@ -18,8 +24,8 @@ const Root: React.FC = () => {
 				<div className="mt-4 flex justify-center">
 					<Route name="Home" path="/home" />
 					<Route name="Overview" path="/overview" />
-					<Route name="NGrams" path="/ngrams" />
-					<Route name="Hotwords" path="/hotwords" />
+					<Route name="N-Grams" path="/ngrams" />
+					<Route name="WordNet" path="/hotwords" />
 					<Route name="Testing" path="/testing" />
 				</div>
 			</div>
