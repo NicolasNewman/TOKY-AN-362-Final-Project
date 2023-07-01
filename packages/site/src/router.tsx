@@ -5,6 +5,7 @@ import Testing from './pages/Testing';
 import NGramExplorer from './pages/NGramExplorer';
 import Overview from './pages/Overview';
 import HotwordExplorer from './pages/HotwordExploer';
+import Methodology from './pages/Methodology';
 
 export default createHashRouter([
 	{
@@ -13,7 +14,7 @@ export default createHashRouter([
 		children: [
 			{
 				path: 'home',
-				element: <Home />,
+				element: <Methodology />,
 			},
 			{
 				path: 'overview',
