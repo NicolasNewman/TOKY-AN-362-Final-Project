@@ -26,7 +26,8 @@ const Root: React.FC = () => {
 					<Route name="Overview" path="/overview" />
 					<Route name="N-Grams" path="/ngrams" />
 					<Route name="WordNet" path="/hotwords" />
-					<Route name="Testing" path="/testing" />
+					<Route name="Visualizations" path="/testing" />
+					<Route name="Conclusion" path="/conclusion" />
 				</div>
 			</div>
 			<div className="mt-10">
