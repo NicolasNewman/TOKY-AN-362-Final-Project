@@ -1,82 +1,63 @@
 import { Network } from '@ghibli-analysis/shared/dist/web';
-import { Network as NetworkChart } from '@nivo/network';
+import { ResponsiveNetwork } from '@nivo/network';
 import React from 'react';
 import { shiftRange } from '../../lib/math';
 
-export interface NodeFilter {
-	minPolarity: number;
-	minNodeWeight: number;
-	minLinkWeight: number;
-}
-
 interface IProps {
 	network: Network;
-	wordFocus: string | null;
-	setWordFocus: (focus: string | null) => void;
-	edgeFocus: string[] | null;
-	setEdgeFocus: (focus: string[] | null) => void;
-	filter: NodeFilter;
+	filter: string[];
+	minLinkWeight?: number;
 }
 
-const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, edgeFocus, setEdgeFocus, filter }) => {
+const SubsetNetwork: React.FC<IProps> = ({ network, filter, minLinkWeight = 1 }) => {
+	const nodeToWeight: { [key: string]: number } = {};
 	const filteredNetwork = (() => {
 		const nodeNames: { [key: string]: number } = {};
-		const linkNames: { [key: string]: number } = {};
-		if (wordFocus) {
-			linkNames[wordFocus] = 1;
-		}
+		// const linkNames: { [key: string]: number } = {};
+
 		let maxLinkWeight = 0;
 		let maxNodeWeight = 0;
 		const temp: Network = {
-			nodes: network.nodes.filter((n) => {
-				if (n.weight < filter.minNodeWeight) return false;
-
-				maxNodeWeight = Math.max(maxNodeWeight, n.weight);
-				nodeNames[n.id] = 1;
-				return true;
-			}),
 			links: network.links.filter((l) => {
-				const a = Math.abs(l.polarity) < Math.abs(filter.minPolarity);
-				const b = l.weight < filter.minLinkWeight;
-				if (a || b) {
-					return false;
+				if (l.weight > minLinkWeight && (filter.includes(l.source) || filter.includes(l.target))) {
+					!nodeNames[l.source] ? (nodeNames[l.source] = l.weight) : (nodeNames[l.source] += l.weight);
+					!nodeNames[l.target] ? (nodeNames[l.target] = l.weight) : (nodeNames[l.target] += l.weight);
+					maxLinkWeight = Math.max(maxLinkWeight, l.weight);
+					return true;
 				}
-				if (nodeNames[l.source] === undefined || nodeNames[l.target] === undefined) {
-					return false;
+				return false;
+			}),
+			nodes: network.nodes.filter((n) => {
+				if (nodeNames[n.id]) {
+					n.weight = nodeNames[n.id];
+					maxNodeWeight = Math.max(maxNodeWeight, n.weight);
+					nodeToWeight[n.id] = n.weight;
+					return true;
 				}
-
-				if (wordFocus) {
-					if (l.source === wordFocus) {
-						linkNames[l.target] = 1;
-					} else if (l.target === wordFocus) {
-						linkNames[l.source] = 1;
-					}
-					if (l.source === wordFocus || l.target === wordFocus) {
-						maxLinkWeight = Math.max(maxLinkWeight, l.weight);
-						return true;
-					}
-					return false;
-				}
-				maxLinkWeight = Math.max(maxLinkWeight, l.weight);
-				linkNames[l.target] = 1;
-				linkNames[l.source] = 1;
-				return true;
+				return false;
 			}),
 			maxLinkWeight,
 			maxNodeWeight,
 		};
-		temp.nodes = temp.nodes.filter((n) => linkNames[n.id] !== undefined);
+		// temp.nodes = temp.nodes.filter((n) => linkNames[n.id] !== undefined);
 		return temp;
 	})();
+	console.log(filteredNetwork);
 	return (
-		<NetworkChart
+		<ResponsiveNetwork
 			data={filteredNetwork}
-			width={2500}
-			height={2500}
-			repulsivity={6}
-			iterations={120}
+			// repulsivity={8}
+			iterations={20}
 			animate={false}
-			linkDistance={(n) => shiftRange(n.weight, [0, network.maxLinkWeight], [300, 200], Math.ceil)}
+			// linkDistance={75}
+			linkDistance={(link) =>
+				shiftRange(
+					Math.max(nodeToWeight[link.target], nodeToWeight[link.source]),
+					[0, filteredNetwork.maxNodeWeight],
+					[25, 75],
+					Math.ceil,
+				)
+			}
 			linkColor={(link) => {
 				const { polarity } = link.data;
 				const num = shiftRange(Math.abs(polarity), [0, 1], [64, 255], Math.ceil);
@@ -86,11 +67,13 @@ const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, ed
 				if (r === 0 && g === 0) return '#aaa';
 				return `rgb(${r},${g},0)`;
 			}}
-			linkThickness={(link) => shiftRange(link.data.weight, [0, network.maxLinkWeight], [1, 12], Math.ceil)}
+			linkThickness={(link) =>
+				shiftRange(link.data.weight, [0, filteredNetwork.maxLinkWeight], [1, 8], Math.ceil)
+			}
 			nodeBorderWidth={1}
-			nodeSize={(n) => shiftRange(n.weight, [0, network.maxNodeWeight], [8, 36], Math.ceil)}
-			inactiveNodeSize={(n) => shiftRange(n.weight, [0, network.maxNodeWeight], [8, 36], Math.ceil)}
-			activeNodeSize={(n) => shiftRange(n.weight, [0, network.maxNodeWeight], [8, 36], Math.ceil)}
+			nodeSize={(n) => shiftRange(n.weight, [0, filteredNetwork.maxNodeWeight], [4, 26], Math.ceil)}
+			inactiveNodeSize={(n) => shiftRange(n.weight, [0, filteredNetwork.maxNodeWeight], [4, 26], Math.ceil)}
+			activeNodeSize={(n) => shiftRange(n.weight, [0, filteredNetwork.maxNodeWeight], [4, 26], Math.ceil)}
 			nodeColor={(n) => {
 				const num = shiftRange(Math.abs(n.polarity), [0, 1], [64, 255], Math.ceil);
 				const r = n.polarity < 0 ? num : 0;
@@ -109,11 +92,10 @@ const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, ed
 						strokeWidth={link.thickness}
 						// strokeDasharray="5 7"
 						strokeLinecap="round"
-						onClick={(e) => {
-							const a = link.source.id;
-							const b = link.target.id;
-							setEdgeFocus([a, b]);
-						}}
+						// onClick={(e) => {
+						// 	const a = link.source.id;
+						// 	const b = link.target.id;
+						// }}
 						cursor={'pointer'}
 					/>
 				);
@@ -163,9 +145,9 @@ const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, ed
 				},
 				note: n.id,
 			}))}
-			onClick={(n) => {
-				setWordFocus(n.data.id);
-			}}
+			// onClick={(n) => {
+			// 	setWordFocus(n.data.id);
+			// }}
 			nodeTooltip={(props) => {
 				// const { size } = props.node;
 				const { id, polarity, weight } = props.node.data;
@@ -202,4 +184,4 @@ const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, ed
 	);
 };
 
-export default HotwordNetwork;
+export default SubsetNetwork;

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { MovieId, movieIdToName } from '@ghibli-analysis/shared/dist/web';
-import { Button, InputNumber, Select, Slider } from 'antd';
+import { Button, Collapse, InputNumber, Select, Slider } from 'antd';
 import Movies from '../lib/data';
 import Route from '../components/Route';
 import { StopOutlined } from '@ant-design/icons';
@@ -17,7 +17,7 @@ const HotwordExplorer: React.FC = () => {
 
 	const minNodeWeightRef = useRef<HTMLInputElement>(null);
 	const minLinkWeightRef = useRef<HTMLInputElement>(null);
-	const minPolarityRef = useRef<HTMLInputElement>(null);
+	const [minPolarityValue, setMinPolarityValue] = useState(0.25);
 
 	const [filter, _setFilter] = useState<NodeFilter>({
 		minPolarity: 0.25,
@@ -25,7 +25,6 @@ const HotwordExplorer: React.FC = () => {
 		minLinkWeight: 2,
 	});
 
-	console.log(filter);
 	const setFilter = (partial: Partial<NodeFilter>) => _setFilter({ ...filter, ...partial });
 
 	const setName = isPos ? 'positiveHotwords' : 'negativeHotwords';
@@ -86,39 +85,79 @@ const HotwordExplorer: React.FC = () => {
 									onClick={() => setWordFocus(null)}
 								/>
 							</div>
-							<div className="grid grid-cols-2 justify-items-end border border-gray-600 p-1 rounded">
-								<span>Min polarity: </span>
-								<div className="w-full">
-									<Slider ref={minPolarityRef} min={0.0} max={1.0} step={0.05} defaultValue={0.25} />
-								</div>
-								<span>Min node weight: </span>
-								<InputNumber
-									ref={minNodeWeightRef}
-									min={0}
-									max={Movies[movieId][setName].maxNodeWeight}
-									defaultValue={1}
-								/>
-								<span>Min link weight: </span>
-								<InputNumber
-									ref={minLinkWeightRef}
-									min={0}
-									max={Movies[movieId][setName].maxLinkWeight}
-									defaultValue={2}
-								/>
-								<Button
-									type="primary"
-									className="bg-[#1668dc]"
-									onClick={() =>
-										setFilter({
-											minLinkWeight: parseInt(minLinkWeightRef.current?.value ?? '1'),
-											minNodeWeight: parseInt(minNodeWeightRef.current?.value ?? '2'),
-											minPolarity: parseFloat(minPolarityRef.current?.value ?? '0.25'),
-										})
-									}
-								>
-									Submit
-								</Button>
-							</div>
+							<Collapse
+								items={[
+									{
+										key: '1',
+										label: 'Filter',
+										children: (
+											<div className="grid grid-cols-2 justify-items-end">
+												<span>Min polarity: </span>
+												<div className="w-full">
+													<Slider
+														value={minPolarityValue}
+														min={0.0}
+														max={1.0}
+														step={0.05}
+														onAfterChange={(v) => setMinPolarityValue(v)}
+													/>
+												</div>
+												<span>Min node weight: </span>
+												<InputNumber
+													ref={minNodeWeightRef}
+													min={0}
+													max={Movies[movieId][setName].maxNodeWeight}
+													defaultValue={1}
+												/>
+												<span>Min link weight: </span>
+												<InputNumber
+													ref={minLinkWeightRef}
+													min={0}
+													max={Movies[movieId][setName].maxLinkWeight}
+													defaultValue={2}
+												/>
+												<Button
+													type="primary"
+													className="bg-[#1668dc]"
+													onClick={() =>
+														setFilter({
+															minLinkWeight: parseInt(
+																minLinkWeightRef.current?.value ?? '1',
+															),
+															minNodeWeight: parseInt(
+																minNodeWeightRef.current?.value ?? '2',
+															),
+															minPolarity: minPolarityValue,
+														})
+													}
+												>
+													Submit
+												</Button>
+											</div>
+										),
+									},
+									{
+										key: '2',
+										label: 'Movie Info',
+										children: (
+											<div className="grid grid-cols-2">
+												<div className="text-end">Normal Average:</div>
+												<div className="text-left ml-4">{Movies[movieId].stats.avg}</div>
+												<div className="text-end">Strong Average:</div>
+												<div className="text-left ml-4">{Movies[movieId].stats.avgStrong}</div>
+												<div className="text-end">Reviews:</div>
+												<div className="text-left ml-4">{Movies[movieId].stats.n}</div>
+												<div className="text-end">Positive:</div>
+												<div className="text-left ml-4">{Movies[movieId].stats.nPositive}</div>
+												<div className="text-end">Negative:</div>
+												<div className="text-left ml-4">{Movies[movieId].stats.nNegative}</div>
+												<div className="text-end">Mixed:</div>
+												<div className="text-left ml-4">{Movies[movieId].stats.nMixed}</div>
+											</div>
+										),
+									},
+								]}
+							/>
 						</>
 					) : (
 						<></>
