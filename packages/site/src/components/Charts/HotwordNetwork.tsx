@@ -22,12 +22,14 @@ const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, ed
 	const filteredNetwork = (() => {
 		const nodeNames: { [key: string]: number } = {};
 		const linkNames: { [key: string]: number } = {};
+		if (wordFocus) {
+			linkNames[wordFocus] = 1;
+		}
 		let maxLinkWeight = 0;
 		let maxNodeWeight = 0;
 		const temp: Network = {
 			nodes: network.nodes.filter((n) => {
 				if (n.weight < filter.minNodeWeight) return false;
-				if (wordFocus && n.id !== wordFocus) return false;
 
 				maxNodeWeight = Math.max(maxNodeWeight, n.weight);
 				nodeNames[n.id] = 1;
@@ -55,6 +57,7 @@ const HotwordNetwork: React.FC<IProps> = ({ network, wordFocus, setWordFocus, ed
 					}
 					return false;
 				}
+				maxLinkWeight = Math.max(maxLinkWeight, l.weight);
 				linkNames[l.target] = 1;
 				linkNames[l.source] = 1;
 				return true;
