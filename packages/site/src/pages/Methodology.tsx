@@ -376,7 +376,32 @@ positive = subset[subset["rating"].ge(4)]`}
 				/>
 			</div>
 			<div className="text-3xl mt-4 mb-2 text-center">Resources</div>
-			<div>TODO</div>
+			<table className="table-auto m-4">
+				<thead className="uppercase bg-gray-700 text-gray-400">
+					<tr>
+						<th className="px-6 py-3">Source</th>
+						<th className="px-6 py-3">Purpose</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr className="border-b bg-gray-800 border-gray-700">
+						<td className="px-6 py-3">Yahoo Movies Japan</td>
+						<td className="px-6 py-3">Review data source</td>
+					</tr>
+					<tr className="border-b bg-gray-800 border-gray-700">
+						<td className="px-6 py-3">Apify</td>
+						<td className="px-6 py-3">Web scraping toolkit</td>
+					</tr>
+					<tr className="border-b bg-gray-800 border-gray-700">
+						<td className="px-6 py-3">Spacy</td>
+						<td className="px-6 py-3">Natural Language Processing toolkit for creating the WordNet</td>
+					</tr>
+					<tr className="border-b bg-gray-800 border-gray-700">
+						<td className="px-6 py-3">Nivo</td>
+						<td className="px-6 py-3">Data visualization library</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	);
 };
