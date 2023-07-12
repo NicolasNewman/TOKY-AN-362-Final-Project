@@ -63,6 +63,42 @@ const Row: React.FC<RowProps> = ({
 const Conclusion: React.FC = () => {
 	return (
 		<div className="flex flex-col w-[100vw] min-h-screen">
+			<div>Through analyzing the WordNet, the following trends appeared that influenced a movies perception:</div>
+			<ul className="max-w-xl mx-auto !list-disc text-left mt-2">
+				<li>
+					<strong>Nostalgia</strong>: older movies tended to have a higher rating then more recent movies.
+					Positive reviews of older movies frequently mentioned having fond memories of watching it while in
+					elemnetary school.
+				</li>
+				<li>
+					<strong>Voice Actors</strong>: amongst negative reviews of Ponyo and Howl's Moving Castle, a poor
+					choice of voice actors was frequently mentioned.
+				</li>
+				<li>
+					<strong>Morals</strong>: for viewers watching with their children, they often commented on the
+					morals the movies instilled. For more recent movies, there's been more complaints of poor morals.
+					For Ponyo, adults were uncomfortable with children calling adults by their first name and the
+					reckless behavior of the mother. For Secret World of Arriety, many felt like the borrowers behavior
+					was teaching kids it was ok to steal. For Spirited Away, adults were uncomfortable with what they
+					saw as the main character being forced to work at a bath house.
+				</li>
+				<li>
+					<strong>Current Events</strong>: airings of some movies on national TV caused an influx of new
+					reviews. Valley of the Wind was aired a few months after lockdown began in 2020 which caused a surge
+					of positive reviews that boosted the movies rating. For Ponyo, it was aired months after the 2011
+					Earthquake which caused a surge of negative reviews since many felt it was inappropriate to air that
+					movie after such an event.
+				</li>
+				<li>
+					<strong>Simple Plots</strong>: Howl's Moving Castle, Grave of the Fireflies, and to a lesser extent
+					Spirited Away and Secret World of Arriety had many negative reviews mentioning a dislike of the more
+					complex plots and find it difficult to understand the message of the movie.
+				</li>
+			</ul>
+			<div className="my-6">
+				Below are subsets of the WordNet that led to this conclusion (note that because synonyms were not
+				merged, some nodes were filtered out from this subset due to having a low weight)
+			</div>
 			<Row
 				movie={Movies['89972']}
 				posFilter={['elementary', 'world', 'music', 'understand', 'magic', 'original', 'cute']}
